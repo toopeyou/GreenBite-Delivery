@@ -1,0 +1,20 @@
+import Hero from "../components/Home/Hero"
+import Features from "../components/Home/Features"
+import PopularProducts from "../components/Home/PopularProducts"
+import HomeCategories from "../components/Home/HomeCategories"
+import AppPromoBanner from "../components/Home/AppPromoBanner"
+import NewsLetter from "../components/Home/Newsletter"
+function Home() {
+  return (
+    <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Hero/>
+        <Features/>
+        <HomeCategories/>
+        <PopularProducts/>
+        <AppPromoBanner/>
+        <NewsLetter />
+    </div>
+  )
+}
+
+export default Home
