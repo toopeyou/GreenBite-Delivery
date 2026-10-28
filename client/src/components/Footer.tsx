@@ -11,25 +11,19 @@ function Footer() {
                     <BikeIcon></BikeIcon>
                 </Link>
                 <p className="text-sm text-white/70 mb-4">{footerData.brand.description}</p>
+                <div className="flex gap-3">
+                    {footerData.brand.socials.map((social,i)=>(
+                      <a className="size-9 rounded-lg bg-white/10 flex-center hover:bg-white/2" key={i} href="#">
+                        <social.icon></social.icon>
+                      </a>
+                    ))}
+
+                </div>
             </div>
             {footerData.sections.map((section, i)=>(
                 <div key={i}>
                     <h3 className="">{section.title}</h3>
-                    <ul className="space-y-2.5">
-                        {section.links.map((link,i)=> (
-                            <li key={i}>
-                                {link.to ? (
-                                    <Link to={`${link.href}`} className="text-sm text-white/70 hover:text-white">
-                                        {link.label}
-                                    </Link>
-                                ): (
-                                    <a className="text-sm text-white/70 hover:text-white" href="#">
-                                        {link.label}
-                                    </a>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
+                
                 </div>
             ))}
             <div>
