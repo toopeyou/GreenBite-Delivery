@@ -8,6 +8,9 @@ import orderRoutes from "./routes/orderRoutes.js";
 
 import { serve } from 'inngest/express'
 import { inngest, functions } from "./inngest/index.js";
+import addressRouter from "./routes/addressRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import deliveryPartnerRouter from "./routes/deliveryPartnerRoutes.js";
 const app = express();
 
 app.use(cors())
@@ -19,13 +22,14 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Server is Live!');
 });
 
-app.use('/api/auth', authRouter)
-app.use('/api/products', productRouter)
-app.use('/api/upload', uploadRoutes)
-app.use('/api/orders', orderRoutes)
-app.use('/api/inngest', serve({client: inngest, functions}))
-
-
+app.use('/api/auth', authRouter);
+app.use('/api/products', productRouter);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/inngest', serve({client: inngest, functions}));
+app.use('/api/address', addressRouter)
+app.use('/api/admin', adminRoutes)
+app.use('/api/delivery', deliveryPartnerRouter)
 app.use((error: any, req: Request, res: Response, next: NextFunction)=>{
     console.error(error)
     res.status(500).json({message: error.message}) 
