@@ -1,6 +1,5 @@
-import React from "react";
 import type { Address } from "../types";
-import { CheckIcon, MapPinIcon, Pencil, PencilIcon, TrashIcon } from "lucide-react";
+import { CheckIcon, MapPinIcon,  PencilIcon, TrashIcon } from "lucide-react";
 import api from "../config/api";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";

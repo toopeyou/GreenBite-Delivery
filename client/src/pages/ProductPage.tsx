@@ -1,4 +1,4 @@
-import { data, Link, useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useCart } from "../context/CartContext";
 import { useEffect, useState } from "react";
 import type { Product } from "../types";

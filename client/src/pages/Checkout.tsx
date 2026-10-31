@@ -3,7 +3,7 @@ import { useCart } from "../context/CartContext";
 import { dummyAddressData } from "../assets/assets";
 import { useEffect, useState } from "react";
 import type { Address } from "../types";
-import { ArrowLeft, CheckIcon, ChevronDownIcon, ChevronRightIcon, CreditCardIcon, MapPinIcon, Scale } from "lucide-react";
+import { ArrowLeft, CheckIcon, ChevronRightIcon, CreditCardIcon, MapPinIcon } from "lucide-react";
 import CheckoutAddress from "../components/Checkout/CheckoutAddress";
 import CheckoutPayment from "../components/Checkout/CheckoutPayment";
 import CheckoutReview from "../components/Checkout/CheckoutReview";

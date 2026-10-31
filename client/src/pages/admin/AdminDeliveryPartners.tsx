@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { PlusIcon, XIcon, TruckIcon, PhoneIcon, MailIcon } from "lucide-react";
 import type { DeliveryPartner } from "../../types";
 import Loading from "../../components/Home/Loading";
-import { dummyDeliveryPartnerData } from "../../assets/assets";
 import api from "../../config/api";
 import toast from "react-hot-toast";
 
@@ -35,6 +34,8 @@ export default function AdminDeliveryPartners() {
             setForm({name: '', email: '', password: '', phone: '', vehicleType: 'bike'});
         } catch (error: any) {
             toast.error(error.response.data.message || error?.message || 'Failed')
+        }finally{
+            setLoading(false)
         }
     };
 

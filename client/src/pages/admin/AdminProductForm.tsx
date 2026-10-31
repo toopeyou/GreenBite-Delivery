@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "lucide-react";
-import { categoriesData, dummyProducts } from "../../assets/assets";
+import { categoriesData } from "../../assets/assets";
 import Loading from "../../components/Home/Loading";
 import api from "../../config/api";
 import toast from "react-hot-toast";
@@ -10,7 +10,9 @@ export default function AdminProductForm() {
     const { id } = useParams();
     const isEdit = Boolean(id);
     const navigate = useNavigate();
-
+    if (id === 'test') {
+       navigate('/') 
+    }
 
     const [loading, setLoading] = useState(isEdit);
     const [saving, setSaving] = useState(false);

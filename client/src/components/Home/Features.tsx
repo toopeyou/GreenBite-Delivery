@@ -1,6 +1,4 @@
-import React from 'react'
 import { heroSectionData } from '../../assets/assets'
-
 function Features() {
   return (
     <section className='bg-white py-5 border border-app-border/80 rounded-xl'>
