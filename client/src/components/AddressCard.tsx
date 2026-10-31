@@ -1,6 +1,9 @@
 import React from "react";
 import type { Address } from "../types";
 import { CheckIcon, MapPinIcon, Pencil, PencilIcon, TrashIcon } from "lucide-react";
+import api from "../config/api";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 interface AddressCardProps {
     addr: Address;
@@ -9,11 +12,22 @@ interface AddressCardProps {
 }
 
 const AddressCard = ({addr, onEditHandler, setAddresses} :  AddressCardProps) =>{
+
+    const {updateUser} = useAuth()
     const hadleDelate = async (id: string) => {
-        console.log(id)
+        try {
+            const confirm = window.confirm('Are you sure you want to delete this address?');
+            if (!confirm) return;
+            const {data} = await api.delete(`/addresses/${id}`);
+            setAddresses(data.addresses);
+            updateUser({addresses: data.addresses})
+            toast.success('Addresss removed')
+        } catch (error: any) {
+            toast.error(error.response.data.message || error?.message)
+        }
     }
   return (
-    <div key={addr._id} className="max-w-3xl bg-white rounded-2xl p-6 flex items-start justify-between">
+    <div key={addr.id} className="max-w-3xl bg-white rounded-2xl p-6 flex items-start justify-between">
         <div className="flex gap-4">
             <div className="size-10 rounded-xl bg-app-cream flex-center shrink-0">
                 <MapPinIcon className="size-5 text-app-green"/>
@@ -40,7 +54,7 @@ const AddressCard = ({addr, onEditHandler, setAddresses} :  AddressCardProps) =>
             <button onClick={()=> onEditHandler(addr)} className="p-2 text-app-text-light hover:text-app-green hover:bg-app-cream rounded-lg transition-colors">
                 <PencilIcon/>
             </button>
-            <button onClick={()=> hadleDelate(addr._id)} className="p-2 text-app-text-light hover:text-app-error hover:bg-red-50 rounded-lg transition-colors">
+            <button onClick={()=> hadleDelate(addr.id)} className="p-2 text-app-text-light hover:text-app-error hover:bg-red-50 rounded-lg transition-colors">
                 <TrashIcon/>
             </button>
         </div>

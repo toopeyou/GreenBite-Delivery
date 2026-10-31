@@ -11,10 +11,15 @@ import { inngest, functions } from "./inngest/index.js";
 import addressRouter from "./routes/addressRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import deliveryPartnerRouter from "./routes/deliveryPartnerRoutes.js";
+import { stripeWebhook } from "./controllers/webhook.js";
 const app = express();
+
+app.post('/api/stripe', express.raw({type: 'application/json'}), stripeWebhook)
 
 app.use(cors())
 app.use(express.json());
+
+
 
 const port = process.env.PORT || 5000;
 

@@ -2,16 +2,31 @@ import { useState } from "react"
 import { heroSectionData } from "../assets/assets"
 import { Link } from "react-router-dom"
 import { BikeIcon, LockIcon, UserIcon, MailIcon, Loader2Icon} from "lucide-react"
+import { useAuth } from "../context/AuthContext"
+import toast from "react-hot-toast"
 function Login() {
   const [isLoginState, setIsLoginState] = useState(true)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const handleSubmot = async ()=> (e: React.SubmitEvent)=>{
+  const {login, register} = useAuth()
+
+
+  const handleSubmot = async (e: React.SubmitEvent)=>{
     e.preventDefault()
     setLoading(true)
-    setTimeout(()=> window.location.href = '/', 999)
+    try {
+      if (isLoginState) {
+        await login(email, password)
+      }else{
+        await register(name,email,password)
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message) 
+    }finally{
+      setLoading(false)
+    }
   }
   return (
     <div className="min-h-screen flex">

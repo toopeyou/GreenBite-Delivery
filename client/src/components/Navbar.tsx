@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ArrowUpRightIcon, BikeIcon, ChevronDown, LogOutIcon, MapPinIcon, MenuIcon, PackageIcon, SearchIcon, ShieldIcon, ShoppingCartIcon, ShoppingCartPlus, UserIcon, XIcon} from "lucide-react"
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-    const user: any = {name: 'John Doe', email: 'john@example.com', isAdmin: true}
+    const {user, logout} = useAuth()
     const {cartCount, setIsCartOpen} = useCart();
     const [searchQuery, setSearchQuery] = useState('')
     const [userMenuOpen, setUserMenuOpen] = useState(false)
     const navigate = useNavigate()
-
-    const handleSearch = (e: React.SubmitEvent)=> {
+        const handleSearch = (e: React.SubmitEvent)=> {
         e.preventDefault()
         if (searchQuery.trim()) {
             navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
@@ -20,6 +20,7 @@ function Navbar() {
     }
 
     const handleLogout = () =>{
+        logout()
         setUserMenuOpen(false)
         navigate("/")
     }

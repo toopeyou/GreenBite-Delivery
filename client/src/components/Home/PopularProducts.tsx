@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react"
 import type { Product } from "../../types"
-import { dummyProducts } from "../../assets/assets"
 import { Link } from "react-router-dom"
 import { ArrowRightIcon } from "lucide-react"
 import ProductCard from "../ProductCard"
+import api from "../../config/api"
+import toast from "react-hot-toast"
 function PopularProducts() {
      const [products, setProducts] = useState<Product[]>([])
 
      useEffect(()=>{
-        setProducts(dummyProducts.slice(0,10))
+        api.get('/products?sort=rating').then(({data})=>{
+            setProducts(data.products)
+        }).catch((error: any)=>{
+            toast.error(error.response.data.message || error?.message)
+        })
+
+
      },[])
   return (
     <section className="pb-16">
@@ -19,13 +26,12 @@ function PopularProducts() {
                     <p className="text-sm text-app-text-light mt-1">Top-rated products this season</p>
                 </div>
                 <Link to={'/products'} className="text-sm font-semibold text-green-600 hover:text-app-orange-dark flex items-center gap-1 transition-colors">
-                  
                     View All <ArrowRightIcon size={4}/>
                 </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5  gap-4 xl:gap-8">
-                {products.map((product)=>(
-                    <ProductCard key={product._id} product={product}/>
+                {products.slice(0,10).map((product)=>(
+                    <ProductCard key={product.id} product={product}/>
                 ))}
             </div>
         </div>

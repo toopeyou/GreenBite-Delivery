@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { prisma } from "../config/prisma.js";
 import { inngest } from "../inngest/index.js";
+import Stripe from 'stripe'
 
 
 export const createOrder = async (req: Request, res: Response)=>{
@@ -55,7 +56,29 @@ export const createOrder = async (req: Request, res: Response)=>{
         })
 
         if(paymentMethod === 'card') {
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
+            
+            const session = await stripe.checkout.sessions.create({
+            success_url: `${req.headers.origin}/orders?clearCart=true`,
+            cancel_url: `${req.headers.origin}/checkout`,
+            line_items: [
+                {
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'Payment Groceries'
+                    },
+                    unit_amount: Math.round(total * 100)
+                },
+                quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            metadata: {orderId: order.id}
+            });
+
+            return res.json({url: session.url })
         }
 
         res.json({order})
@@ -135,20 +158,47 @@ export const updateOrderStatus = async (req: Request, res: Response)=> {
 
 
 
+export const getAllOrders = async (req: Request, res: Response) => {
+    try {
+        const orders = await prisma.order.findMany({
+            where: {
+                NOT: [
+                    {
+                        paymentMethod: "card",
+                        isPaid: false
+                    }
+                ]
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true
+                    }
+                },
+                deliveryPartner: {
+                    select: {
+                        name: true,
+                        phone: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: "desc"
+            }
+        });
 
-export const getAllOrders = async (req: Request, res: Response)=> {
+        return res.status(200).json({ orders });
 
-    const orders = await prisma.order.findMany({
-        where: {NOT: [{paymentMethod: 'card'}]},
-        include: {
-            user: {select: {name: true, email: true}},
-            deliveryPartner: {select: {name: true, phone: true}}},
-        orderBy: {createdAt: 'desc'},
+    } catch (error) {
+        console.error("GET ALL ORDERS ERROR:", error);
 
-    })
-    res.json({orders})
-}
-
+        return res.status(500).json({
+            message: "Failed to fetch orders",
+            error: error instanceof Error ? error.message : error
+        });
+    }
+};
 
 export const getOrderLocation = async (req: Request, res: Response)=>{
     const order = await prisma.order.findFirst({

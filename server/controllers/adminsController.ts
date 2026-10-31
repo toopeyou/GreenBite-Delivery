@@ -3,39 +3,67 @@ import { prisma } from "../config/prisma.js";
 
 import bcrypt from 'bcrypt'
 
+
 export const getAdminStats = async (req: Request, res: Response) => {
-  const [
-    totalOrders,
-    totalUsers,
-    totalProducts,
-    outOfStock,
-    totalPartners,
-    recentOrders,
-  ] = await Promise.all([
-    prisma.order.count({where: { NOT: [{ paymentMethod: "card", isPaid: 
-        false }]}}),
-    prisma.user.count(),
-    prisma.product.count(),
-    prisma.product.count({ where: { stock: 0 } }),
-    prisma.deliveryPartner.count(),
-    prisma.order.findMany({
-        where: { NOT: [{ paymentMethod: "card", isPaid: false }]},
-        orderBy: {createdAt: 'desc'},
+  try {
+    const [
+      totalOrders,
+      totalUsers,
+      totalProducts,
+      outOfStock,
+      totalPartners,
+      recentOrders,
+    ] = await Promise.all([
+      prisma.order.count({
+        where: {
+          NOT: [{ paymentMethod: "card", isPaid: false }]
+        }
+      }),
+
+      prisma.user.count(),
+
+      prisma.product.count(),
+
+      prisma.product.count({
+        where: { stock: 0 }
+      }),
+
+      prisma.deliveryPartner.count(),
+
+      prisma.order.findMany({
+        where: {
+          NOT: [{ paymentMethod: "card", isPaid: false }]
+        },
+        orderBy: { createdAt: "desc" },
         take: 8,
-        include: {user: {select: {name: true, email: true}},
-        deliveryPartner: {select: {name: true, phone: true}}
-    },
-        
-    }),
-  ]);
+        include: {
+          user: {
+            select: { name: true, email: true }
+          },
+          deliveryPartner: {
+            select: { name: true, phone: true }
+          }
+        }
+      })
+    ]);
 
+    return res.status(200).json({
+      totalOrders,
+      totalUsers,
+      totalProducts,
+      outOfStock,
+      totalPartners,
+      recentOrders
+    });
 
-  res.json({ totalOrders,
-    totalUsers,
-    totalProducts,
-    outOfStock,
-    totalPartners,
-    recentOrders})
+  } catch (error) {
+    console.error("ADMIN STATS ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to fetch admin statistics",
+      error: error instanceof Error ? error.message : error
+    });
+  }
 };
 
 
@@ -77,7 +105,7 @@ export const updateDeliveryPartner = async (req: Request, res: Response) => {
   if (name) data.name = name;
   if (phone) data.phone = phone;
   if (vehicleType) data.vehicleType = vehicleType;
-  if (isActive) data.isActive = isActive;
+  data.isActive = isActive;
 
   try {
     const partner = await prisma.deliveryPartner.update({

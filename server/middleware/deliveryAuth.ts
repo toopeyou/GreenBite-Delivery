@@ -9,7 +9,7 @@ const deliveryAuth = async (req: Request, res: Response, next: NextFunction) =>{
             return res.status(401).json({message: 'NO token providede'})
         }
 
-        const token = authHeader.split('')[1];
+        const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {id: string, role: string};
 
         if (decoded.role !== 'delivery') {
@@ -35,3 +35,6 @@ const deliveryAuth = async (req: Request, res: Response, next: NextFunction) =>{
 }
 
 export default deliveryAuth;
+
+
+

@@ -12,7 +12,7 @@ const ProductCard = ({product}: Props) => {
     const {addToCart} = useCart()
     const navigate = useNavigate();
     return (
-    <div onClick={()=> navigate(`/product/${product._id}`)} className="bg-white rounded-2xl overflow-hidden shadow hover:shadow-md transition-all duration-300 group animate-fade-in cursor-pointer"> 
+    <div onClick={()=> navigate(`/product/${product.id}`)} className="bg-white rounded-2xl overflow-hidden shadow hover:shadow-md transition-all duration-300 group animate-fade-in cursor-pointer"> 
       <div className="relative aspect-square overflow-hidden">
             <img src={product.image} className="w-full h-full object-cover p-4 group-hover:p-2 transition-all duration-300" alt={product.name} />
             <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
