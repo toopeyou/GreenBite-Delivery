@@ -1,1 +1,1 @@
-tps://green-bite-delivery.vercel.app
+https://green-bite-delivery.vercel.app/
